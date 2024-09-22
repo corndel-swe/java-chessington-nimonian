@@ -32,8 +32,7 @@ public class Main {
         "/select-piece",
         ctx -> {
           var selectedSquare = ctx.bodyAsClass(Coordinates.class);
-          var allowedMoves =
-              game.getAllowedMoves(selectedSquare).stream().map(move -> move.getTo()).toList();
+          var allowedMoves = game.getAllowedMoves(selectedSquare).stream().map(move -> move.getTo()).toList();
 
           ctx.json(allowedMoves);
         });
@@ -47,6 +46,6 @@ public class Main {
           ctx.json(game);
         });
 
-    app.start(8080);
+    app.start(8173);
   }
 }
