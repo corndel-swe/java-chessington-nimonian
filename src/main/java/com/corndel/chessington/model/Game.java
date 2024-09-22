@@ -17,10 +17,29 @@ public class Game {
     this.board = board;
   }
 
+  /**
+   * Returns the piece at the given coordinates on the board.
+   *
+   * @param row the row number of the piece to retrieve
+   * @param col the column number of the piece to retrieve
+   * @return the piece at the given coordinates, or null if there is no piece
+   */
   public Piece pieceAt(int row, int col) {
     return board.get(new Coordinates(row, col));
   }
 
+  /**
+   * Returns all the allowed moves for the piece at the given coordinates.
+   * <p>
+   * If the game has ended, or there is no piece at the given coordinates, or the
+   * piece at the given coordinates is not of the current player, an empty list is
+   * returned.
+   *
+   * @param from the coordinates of the piece to retrieve allowed moves for
+   * @return a list of all the allowed moves for the piece at the given
+   *         coordinates,
+   *         or an empty list if there is no piece, or the game has ended
+   */
   @JsonIgnore
   public List<Move> getAllowedMoves(Coordinates from) {
     if (isEnded) {
@@ -35,6 +54,18 @@ public class Game {
     return piece.getAllowedMoves(from, board);
   }
 
+  /**
+   * Makes a move on the board.
+   * <p>
+   * This method first checks to see if the game has ended. If it has, an
+   * {@link InvalidMoveException} is thrown.
+   * <p>
+   * If the move is valid, the piece is moved from the start coordinates to the
+   * end coordinates, and the current player is switched.
+   *
+   * @param move the move to be made
+   * @throws InvalidMoveException if the move is invalid
+   */
   public void makeMove(Move move) throws InvalidMoveException {
     if (isEnded) {
       throw new InvalidMoveException("Game has ended!");
@@ -62,21 +93,55 @@ public class Game {
     currentPlayer = currentPlayer.getOpposite();
   }
 
+  /**
+   * Returns whether the game has ended.
+   * <p>
+   * If the game has ended, {@link #getResult()} can be used to find out the
+   * result of the game.
+   *
+   * @return whether the game has ended
+   */
   @JsonIgnore
   public boolean isEnded() {
     return isEnded;
   }
 
+  /**
+   * Returns the result of the game, if it has ended.
+   * <p>
+   * If the game has not ended, this method returns null.
+   * <p>
+   * The result is a string that is either "white-wins", "black-wins", or "draw".
+   *
+   * @return the result of the game, or null if the game has not ended
+   */
   @JsonIgnore
   public String getResult() {
     return null;
   }
 
+  /**
+   * Returns the state of the board as a two dimensional array of pieces, where
+   * the first index is the row
+   * and the second index is the column. The top left is [0][0] and the bottom
+   * right is [7][7].
+   * <p>
+   * The board is returned in its current state, which may have changed since the
+   * game started.
+   *
+   * @return a two dimensional array of pieces, representing the current state of
+   *         the board
+   */
   @JsonProperty("board_pieces")
   public Piece[][] getBoardPieces() {
     return board.getBoard();
   }
 
+  /**
+   * Returns the current player.
+   *
+   * @return the current player
+   */
   @JsonProperty("current_player")
   public PlayerColour getCurrentPlayer() {
     return currentPlayer;
