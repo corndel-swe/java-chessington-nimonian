@@ -9,6 +9,8 @@ import io.javalin.http.ContentType;
 import io.javalin.http.staticfiles.Location;
 
 public class Main {
+  private static final int PORT = 8173;
+
   public static void main(String[] args) {
     var board = Board.forNewGame();
     var game = new Game(board);
@@ -18,22 +20,16 @@ public class Main {
         "/",
         ctx -> {
           ctx.contentType(ContentType.TEXT_HTML);
-          var inputStream = Main.class.getResourceAsStream("/html/index.html");
-          ctx.result(inputStream);
+          ctx.result(Main.class.getResourceAsStream("/html/index.html"));
         });
 
-    app.get(
-        "/board-data",
-        ctx -> {
-          ctx.json(game);
-        });
+    app.get("/board-data", ctx -> ctx.json(game));
 
     app.post(
         "/select-piece",
         ctx -> {
           var selectedSquare = ctx.bodyAsClass(Coordinates.class);
-          var allowedMoves =
-              game.getAllowedMoves(selectedSquare).stream().map(move -> move.getTo()).toList();
+          var allowedMoves = game.getAllowedMoves(selectedSquare).stream().map(move -> move.getTo()).toList();
 
           ctx.json(allowedMoves);
         });
@@ -47,6 +43,6 @@ public class Main {
           ctx.json(game);
         });
 
-    app.start(8080);
+    app.start(PORT);
   }
 }
