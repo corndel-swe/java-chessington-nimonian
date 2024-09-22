@@ -1,6 +1,6 @@
 package com.corndel.exercises;
 
-public class Rectangle {
+public class Rectangle implements Shape {
   private double width;
   private double height;
 
@@ -9,10 +9,12 @@ public class Rectangle {
     this.height = height;
   }
 
+  @Override
   public double getArea() {
     return this.width * this.height;
   }
 
+  @Override
   public double getPerimeter() {
     return 2 * (this.width + this.height);
   }
